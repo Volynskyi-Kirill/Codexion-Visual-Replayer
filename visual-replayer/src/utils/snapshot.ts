@@ -26,6 +26,7 @@ export function generateSnapshot(
             status: CoderStatus.IDLE,
             deadline: 0,
             current_dongle_id: null,
+            current_dongle_ids: [],
             compiles_done: 0,
         });
     }
@@ -59,7 +60,12 @@ export function generateSnapshot(
             case SimulationStatus.TAKE_DONGLE: {
                 const coder = coders.get(event.coder_id);
                 const dongle = dongles.get(event.dongle_id);
-                if (coder) coder.current_dongle_id = event.dongle_id;
+                if (coder) {
+                    coder.current_dongle_id = event.dongle_id;
+                    if (!coder.current_dongle_ids.includes(event.dongle_id)) {
+                        coder.current_dongle_ids.push(event.dongle_id);
+                    }
+                }
                 if (dongle) {
                     dongle.current_owner_id = event.coder_id;
                     dongle.queue = event.queue;
@@ -88,7 +94,13 @@ export function generateSnapshot(
                 const dongle = dongles.get(event.dongle_id);
                 if (coder) {
                     coder.status = CoderStatus.IDLE;
-                    coder.current_dongle_id = null;
+                    coder.current_dongle_ids = coder.current_dongle_ids.filter(
+                        (dongleId) => dongleId !== event.dongle_id,
+                    );
+                    coder.current_dongle_id =
+                        coder.current_dongle_ids[
+                            coder.current_dongle_ids.length - 1
+                        ] ?? null;
                 }
                 if (dongle) {
                     dongle.current_owner_id = null;
