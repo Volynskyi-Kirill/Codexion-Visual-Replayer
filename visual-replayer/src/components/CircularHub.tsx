@@ -36,7 +36,7 @@ export const CircularHub: React.FC = () => {
 
     const codersArray = Array.from(snapshot.coders.values());
     const donglesArray = Array.from(snapshot.dongles.values());
-    const lineTransition = { duration: 0.22, ease: 'easeOut' as const };
+    const lineTransition = { duration: 0.3, ease: 'easeOut' as const };
 
     return (
         <div
@@ -116,9 +116,18 @@ export const CircularHub: React.FC = () => {
                                     stroke={COLORS.LINE_ACTIVE}
                                     strokeWidth='2'
                                     strokeDasharray='5,5'
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 0.6 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{
+                                        opacity: 0,
+                                        strokeDashoffset: -100,
+                                    }}
+                                    animate={{
+                                        opacity: 0.6,
+                                        strokeDashoffset: 0,
+                                    }}
+                                    exit={{
+                                        opacity: 0,
+                                        strokeDashoffset: -100,
+                                    }}
                                     transition={lineTransition}
                                 />
                             );
@@ -164,9 +173,18 @@ export const CircularHub: React.FC = () => {
                                     stroke={COLORS.LINE_WAITING}
                                     strokeWidth='2'
                                     strokeDasharray='3,6'
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 0.55 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{
+                                        opacity: 0,
+                                        strokeDashoffset: -100,
+                                    }}
+                                    animate={{
+                                        opacity: 0.55,
+                                        strokeDashoffset: 0,
+                                    }}
+                                    exit={{
+                                        opacity: 0,
+                                        strokeDashoffset: -100,
+                                    }}
                                     transition={lineTransition}
                                 />
                             );
