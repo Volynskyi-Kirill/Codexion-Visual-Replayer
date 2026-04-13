@@ -168,15 +168,19 @@ header h1 {
 /* Event Log */
 .log-section {
   flex: 1;
+  max-height: 400px; /* Constrain the height */
 }
 
 .event-list {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   overflow-y: auto;
   font-family: monospace;
   font-size: 0.75rem;
+  padding-right: 0.5rem;
 }
 
 .event-item {
