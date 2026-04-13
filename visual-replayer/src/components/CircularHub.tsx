@@ -124,6 +124,53 @@ export const CircularHub: React.FC = () => {
                     })}
                 </AnimatePresence>
 
+                {/* Waiting Lines */}
+                <AnimatePresence>
+                    {donglesArray.map((dongle) => {
+                        if (dongle.queue.length === 0) return null;
+
+                        const dongleAngle = getDongleAngle(
+                            dongle.id,
+                            metadata.num_dongles,
+                        );
+                        const donglePos = polarToCartesian(
+                            dongleAngle,
+                            DONGLE_RADIUS,
+                        );
+
+                        return dongle.queue.map((coderId) => {
+                            if (dongle.current_owner_id === coderId) {
+                                return null;
+                            }
+
+                            const coderAngle = getCoderAngle(
+                                coderId,
+                                metadata.num_coders,
+                            );
+                            const coderPos = polarToCartesian(
+                                coderAngle,
+                                CODER_RADIUS,
+                            );
+
+                            return (
+                                <motion.line
+                                    key={`waiting-line-${coderId}-${dongle.id}`}
+                                    x1={coderPos.x}
+                                    y1={coderPos.y}
+                                    x2={donglePos.x}
+                                    y2={donglePos.y}
+                                    stroke={COLORS.LINE_WAITING}
+                                    strokeWidth='2'
+                                    strokeDasharray='3,6'
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 0.55 }}
+                                    exit={{ opacity: 0 }}
+                                />
+                            );
+                        });
+                    })}
+                </AnimatePresence>
+
                 {/* Dongles */}
                 {donglesArray.map((dongle) => (
                     <DongleNode
