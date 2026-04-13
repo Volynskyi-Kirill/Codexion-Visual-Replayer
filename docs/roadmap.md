@@ -6,9 +6,9 @@
 - [x] Establish directory structure (`components/`, `hooks/`, `store/`, `utils/`).
 
 ## Milestone 2: Log Parsing & Simulation State 
-- [ ] Create `useLogStore` for managing simulation data and current timestamp.
-- [ ] Implement `Parser` for validating and indexing JSON-per-line logs.
-- [ ] Create a `SnapshotGenerator` that calculates the state of all coders/dongles for any given `ts`.
+- [x] Create `useLogStore` for managing simulation data and current timestamp.
+- [x] Implement `Parser` for validating and indexing JSON-per-line logs.
+- [x] Create a `SnapshotGenerator` that calculates the state of all coders/dongles for any given `ts`.
 
 ## Milestone 3: Core Hub Visualization 
 - [ ] Implement `CircularHub` SVG container.
