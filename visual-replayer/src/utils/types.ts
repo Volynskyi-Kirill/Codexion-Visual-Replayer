@@ -35,6 +35,12 @@ export interface InitializeEvent {
     num_coders: number;
     num_dongles: number;
     time_to_burnout: number;
+    time_to_compile?: number;
+    time_to_debug?: number;
+    time_to_refactor?: number;
+    num_compiles_required?: number;
+    dongle_cooldown?: number;
+    scheduler?: string;
 }
 
 export interface RequestDongleEvent extends BaseEvent {

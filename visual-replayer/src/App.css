@@ -328,3 +328,41 @@ header h1 {
 .animate-spin-slow {
     animation: spin-slow 10s linear infinite;
 }
+
+/* Simulation Info */
+.simulation-info {
+    background: #1e293b;
+    border-radius: 0.75rem;
+    border: 1px solid #334155;
+    padding: 1rem;
+    margin-top: auto;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: #0f172a;
+    border-radius: 0.5rem;
+    border: 1px solid #334155;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #3b82f6;
+    font-weight: 600;
+    font-family: monospace;
+}

@@ -3,6 +3,7 @@ import { CircularHub } from './components/CircularHub';
 import { PlaybackControls } from './components/PlaybackControls';
 import { HeapViewer } from './components/HeapViewer';
 import { EventLog } from './components/EventLog';
+import { SimulationInfo } from './components/SimulationInfo';
 import './App.css';
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
                             </aside>
                         </div>
                     </div>
+                    {metadata && <SimulationInfo metadata={metadata} />}
                 </main>
             )}
         </div>
