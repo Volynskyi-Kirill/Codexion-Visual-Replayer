@@ -1,4 +1,0 @@
-{"timestamp":"2026-04-13T17:35:38.537842787Z","session_id":"8e54622a-c546-4d33-ba09-cfbb2d60d490","client_ip":"::1","event":"connected"}
-{"timestamp":"2026-04-13T17:35:47.543905426Z","session_id":"8e54622a-c546-4d33-ba09-cfbb2d60d490","client_ip":"::1","event":"disconnected","duration_seconds":9.006038934,"disconnect_reason":"normal"}
-{"timestamp":"2026-04-13T18:18:01.36229035Z","session_id":"8158739a-0c10-4498-8351-bc6bd2c66a28","client_ip":"172.19.0.1","event":"connected"}
-{"timestamp":"2026-04-13T18:18:13.366862922Z","session_id":"8158739a-0c10-4498-8351-bc6bd2c66a28","client_ip":"172.19.0.1","event":"disconnected","duration_seconds":12.004457994,"disconnect_reason":"normal"}
