@@ -9,7 +9,7 @@ import type { SimulationConfig } from '../utils/types';
 type FormData = Omit<SimulationConfig, 'number_of_dongles'>;
 
 export const SimulationForm: React.FC = () => {
-    const { fetchLogs, isLoading, error } = useLogStore();
+    const { startSimulation, isLoading, error } = useLogStore();
 
     const {
         register,
@@ -25,7 +25,7 @@ export const SimulationForm: React.FC = () => {
             ...data,
             number_of_dongles: data.number_of_coders,
         };
-        await fetchLogs(fullConfig);
+        await startSimulation(fullConfig);
     };
 
     return (

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import type { TimedEvent, InitializeEvent, SimulationConfig } from '../utils/types';
-import { parseLogs } from '../utils/parser';
-import { ERROR_MESSAGES, API_SIMULATION_PATH } from '../constants';
+import { parseLogs, parseLogLine } from '../utils/parser';
+import { ERROR_MESSAGES, WS_SIMULATION_PATH } from '../constants';
+import { SimulationStatus } from '../utils/types';
 
 interface LogStore {
   metadata: InitializeEvent | null;
@@ -10,12 +11,13 @@ interface LogStore {
   currentEventIndex: number;
   maxTime: number;
   isLoading: boolean;
+  isStreaming: boolean;
   error: string | null;
   isPlaying: boolean;
   speed: number;
 
   setLogs: (content: string) => void;
-  fetchLogs: (config: SimulationConfig) => Promise<void>;
+  startSimulation: (config: SimulationConfig) => Promise<void>;
   setCurrentTime: (ts: number) => void;
   setIsPlaying: (playing: boolean) => void;
   setSpeed: (speed: number) => void;
@@ -24,13 +26,14 @@ interface LogStore {
   reset: () => void;
 }
 
-export const useLogStore = create<LogStore>((set, get) => ({
+export const useLogStore = create<LogStore>((set) => ({
   metadata: null,
   events: [],
   currentTime: 0,
   currentEventIndex: -1,
   maxTime: 0,
   isLoading: false,
+  isStreaming: false,
   error: null,
   isPlaying: false,
   speed: 1,
@@ -54,27 +57,62 @@ export const useLogStore = create<LogStore>((set, get) => ({
     }
   },
 
-  fetchLogs: async (config: SimulationConfig) => {
-    set({ isLoading: true, error: null });
+  startSimulation: async (config: SimulationConfig) => {
+    set({ 
+      isLoading: true, 
+      isStreaming: true,
+      error: null, 
+      events: [], 
+      metadata: null, 
+      currentTime: 0, 
+      maxTime: 0, 
+      currentEventIndex: -1 
+    });
+
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'localhost:3000';
+    const wsUrl = `ws://${baseUrl.replace(/^https?:\/\//, '')}${WS_SIMULATION_PATH}`;
+    
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
-      const response = await fetch(`${baseUrl}${API_SIMULATION_PATH}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(config),
-      });
+      const socket = new WebSocket(wsUrl);
 
-      if (!response.ok) {
-        throw new Error(ERROR_MESSAGES.FETCH_FAILED);
-      }
+      socket.onopen = () => {
+        socket.send(JSON.stringify(config));
+      };
 
-      const content = await response.text();
-      get().setLogs(content);
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : ERROR_MESSAGES.FETCH_FAILED;
-      set({ error: message, isLoading: false });
+      socket.onmessage = (msg) => {
+        const parsed = parseLogLine(msg.data);
+        if (!parsed) return;
+
+        if (parsed.status === SimulationStatus.INITIALIZE) {
+          set({ metadata: parsed, isLoading: false, isPlaying: true });
+        } else {
+          set((state) => {
+            const newEvents = [...state.events, parsed as TimedEvent];
+            const newMaxTime = Math.max(state.maxTime, parsed.ts);
+            
+            // If the user is currently at the "end" of the timeline, 
+            // automatically advance to keep up with the live stream
+            const shouldFollow = state.currentTime === state.maxTime;
+            
+            return {
+              events: newEvents,
+              maxTime: newMaxTime,
+              currentTime: shouldFollow ? newMaxTime : state.currentTime,
+              currentEventIndex: shouldFollow ? newEvents.length - 1 : state.currentEventIndex,
+            };
+          });
+        }
+      };
+
+      socket.onerror = () => {
+        set({ error: ERROR_MESSAGES.FETCH_FAILED, isLoading: false, isStreaming: false });
+      };
+
+      socket.onclose = () => {
+        set({ isStreaming: false, isPlaying: false });
+      };
+    } catch (e) {
+      set({ error: ERROR_MESSAGES.FETCH_FAILED, isLoading: false, isStreaming: false });
     }
   },
 
@@ -89,10 +127,15 @@ export const useLogStore = create<LogStore>((set, get) => ({
           break;
         }
       }
+      
+      // During streaming, we don't want to stop playing just because we hit the current maxTime,
+      // as more events are expected to arrive.
+      const shouldStop = !state.isStreaming && clampedTs >= state.maxTime;
+      
       return {
         currentTime: clampedTs,
         currentEventIndex: newIndex,
-        isPlaying: clampedTs >= state.maxTime ? false : state.isPlaying,
+        isPlaying: shouldStop ? false : state.isPlaying,
       };
     });
   },
