@@ -15,11 +15,11 @@ import (
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		return true // Allow all origins for local development
+		return true // Validation is done via CORS middleware
 	},
 }
 
-func HandleWS(c *gin.Context) {
+func (api *API) HandleWS(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Printf("Failed to upgrade connection: %v", err)
@@ -42,7 +42,7 @@ func HandleWS(c *gin.Context) {
 	}
 
 	// 2. Start simulation
-	runner := simulation.NewRunner("./codexion")
+	runner := simulation.NewRunner(api.cfg.Server.CodexionPath)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

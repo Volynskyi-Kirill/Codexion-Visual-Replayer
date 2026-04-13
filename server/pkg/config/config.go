@@ -9,13 +9,17 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port string
+	Port         string
+	ClientHost   string
+	CodexionPath string
 }
 
 func Load() *Config {
 	return &Config{
 		Server: ServerConfig{
-			Port: getEnv("PORT", "8080"),
+			Port:         getEnv("PORT", "8080"),
+			ClientHost:   getEnv("CLIENT_HOST", "http://localhost:5173"),
+			CodexionPath: getEnv("CODEXION_PATH", "./codexion"),
 		},
 	}
 }
