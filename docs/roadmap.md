@@ -17,9 +17,9 @@
 - [x] Implement ownership lines between coders and dongles.
 
 ## Milestone 4: Timeline & Animation
-- [ ] Build `TimelineSlider` with millisecond scrubbing.
-- [ ] Implement `PlaybackEngine` (requestAnimationFrame) to advance `ts` based on speed.
-- [ ] Add state icons for "Compiling," "Debugging," and "Refactoring."
+- [x] Build `TimelineSlider` with millisecond scrubbing.
+- [x] Implement `PlaybackEngine` (requestAnimationFrame) to advance `ts` based on speed.
+- [x] Add state icons for "Compiling," "Debugging," and "Refactoring."
 
 ## Milestone 5: Advanced Features & Polish 
 - [ ] Implement `HeapViewer` sidebar for real-time dongle queue inspection.

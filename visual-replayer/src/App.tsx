@@ -1,9 +1,10 @@
 import { useLogStore } from './store/useLogStore';
 import { CircularHub } from './components/CircularHub';
+import { PlaybackControls } from './components/PlaybackControls';
 import './App.css';
 
 function App() {
-  const { setLogs, metadata, currentTime, setCurrentTime, maxTime } = useLogStore();
+  const { setLogs, metadata } = useLogStore();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -18,26 +19,18 @@ function App() {
       
       {!metadata ? (
         <div className="upload-section">
-          <input type="file" onChange={handleFileChange} accept=".txt,.log" />
-          <p>Select a simulation log file to begin.</p>
+          <input type="file" id="file-upload" onChange={handleFileChange} accept=".txt,.log" hidden />
+          <label htmlFor="file-upload" className="upload-btn">
+            Select Simulation Log
+          </label>
+          <p>Drag and drop or click to upload a .txt or .log file</p>
         </div>
       ) : (
         <div className="replayer-content">
-          <div className="controls">
-            <input 
-              type="range" 
-              min={0} 
-              max={maxTime} 
-              value={currentTime} 
-              onChange={(e) => setCurrentTime(Number(e.target.value))} 
-              style={{ width: '100%' }}
-            />
-            <div className="time-info">
-              <span>Time: {currentTime}ms / {maxTime}ms</span>
-            </div>
+          <PlaybackControls />
+          <div className="hub-wrapper">
+            <CircularHub />
           </div>
-          
-          <CircularHub />
         </div>
       )}
     </div>

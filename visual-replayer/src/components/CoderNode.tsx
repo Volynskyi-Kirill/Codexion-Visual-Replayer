@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { User } from 'lucide-react';
+import { User, Settings, Bug, Wrench, AlertTriangle } from 'lucide-react';
 import type { CoderState } from '../utils/types';
 import { polarToCartesian, getCoderAngle } from '../utils/geometry';
 import { CODER_RADIUS, NODE_SIZE, COLORS } from '../utils/constants';
@@ -23,6 +23,17 @@ const getStatusColor = (status: CoderState['status']) => {
   }
 };
 
+const StatusIcon = ({ status, size }: { status: CoderState['status'], size: number }) => {
+  switch (status) {
+    case 'COMPILING': return <Settings size={size} />;
+    case 'DEBUGGING': return <Bug size={size} />;
+    case 'REFACTORING': return <Wrench size={size} />;
+    case 'BURNOUT': return <AlertTriangle size={size} />;
+    case 'WAITING': return <User size={size} opacity={0.5} />;
+    default: return <User size={size} />;
+  }
+};
+
 export const CoderNode: React.FC<CoderNodeProps> = ({ 
   coder, 
   totalCoders, 
@@ -34,7 +45,7 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
   
   const timeLeft = coder.deadline > 0 ? Math.max(0, coder.deadline - currentTime) : timeToBurnout;
   const progress = timeLeft / timeToBurnout;
-  const strokeDasharray = 2 * Math.PI * (NODE_SIZE / 2);
+  const strokeDasharray = 2 * Math.PI * (NODE_SIZE / 2 + 5);
   const strokeDashoffset = strokeDasharray * (1 - progress);
 
   return (
@@ -57,7 +68,7 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
         strokeWidth="4"
         strokeDasharray={strokeDasharray}
         animate={{ strokeDashoffset }}
-        style={{ rotate: -90 }}
+        style={{ rotate: -90, transformOrigin: 'center' }}
       />
 
       {/* Coder Background */}
@@ -82,13 +93,13 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
           height: '100%',
           color: getStatusColor(coder.status)
         }}>
-          <User size={32} />
+          <StatusIcon status={coder.status} size={32} />
         </div>
       </foreignObject>
 
       {/* ID Label */}
       <text
-        y={NODE_SIZE / 2 + 25}
+        y={NODE_SIZE / 2 + 35}
         textAnchor="middle"
         fill="white"
         fontSize="12"
