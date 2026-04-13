@@ -16,10 +16,12 @@ const START_ANGLE = -Math.PI / 2;
 
 export function getCoderAngle(index: number, total: number): number {
     if (total <= 0) return START_ANGLE;
-    return START_ANGLE + ((2 * Math.PI) / total) * index;
+    return START_ANGLE + ((2 * Math.PI) / total) * Math.max(0, index - 1);
 }
 
 export function getDongleAngle(index: number, total: number): number {
     if (total <= 0) return START_ANGLE;
-    return START_ANGLE + ((2 * Math.PI) / total) * (index + 0.5);
+    return (
+        START_ANGLE + ((2 * Math.PI) / total) * (Math.max(0, index - 1) + 0.5)
+    );
 }
