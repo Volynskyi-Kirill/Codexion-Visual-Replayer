@@ -38,7 +38,8 @@ static int	parse_numeric_arguments(t_data *data, char *argv[])
 	if (data->time_to_burnout <= 0 || data->time_to_compile <= 0
 		|| data->time_to_debug <= 0 || data->time_to_refactor <= 0)
 	{
-		printf("ERROR: enter positive value!\n");
+		fprintf(stderr, 
+"ERROR: enter positive value!\n");
 		return (1);
 	}
 	return (0);
@@ -48,7 +49,8 @@ int	parse(t_data *data, int argc, char *argv[])
 {
 	if (argc != 9)
 	{
-		printf("ERROR: enter all arguments!\n");
+		fprintf(stderr, 
+"ERROR: enter all arguments!\n");
 		return (1);
 	}
 	if (parse_numeric_arguments(data, argv) != 0)
@@ -59,7 +61,8 @@ int	parse(t_data *data, int argc, char *argv[])
 		data->scheduler = CODERS_SCHED_EDF;
 	else
 	{
-		printf("Error: Invalid scheduler. Use 'fifo' or 'edf'.\n");
+		fprintf(stderr, 
+"Error: Invalid scheduler. Use 'fifo' or 'edf'.\n");
 		return (1);
 	}
 	data->is_simulation_end = 0;
@@ -72,13 +75,15 @@ int	parse_long_long(char *value, long long *out)
 
 	if (!ft_isdigitstr(value))
 	{
-		printf("ERROR: enter only digits!\n");
+		fprintf(stderr, 
+"ERROR: enter only digits!\n");
 		return (1);
 	}
 	time = ft_atoll(value);
 	if (time < 0)
 	{
-		printf("ERROR: value out of range!\n");
+		fprintf(stderr, 
+"ERROR: value out of range!\n");
 		return (1);
 	}
 	*out = time;
@@ -91,18 +96,21 @@ int	parse_int(char *value, int *out)
 
 	if (!ft_isdigitstr(value))
 	{
-		printf("ERROR: enter only digits!\n");
+		fprintf(stderr, 
+"ERROR: enter only digits!\n");
 		return (1);
 	}
 	num = ft_atoll(value);
 	if (num < 0 || num > INT_MAX)
 	{
-		printf("ERROR: value out of range!\n");
+		fprintf(stderr, 
+"ERROR: value out of range!\n");
 		return (1);
 	}
 	if (num <= 0)
 	{
-		printf("ERROR: enter positive value!\n");
+		fprintf(stderr, 
+"ERROR: enter positive value!\n");
 		return (1);
 	}
 	*out = (int)num;

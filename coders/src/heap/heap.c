@@ -69,7 +69,8 @@ void	insert_heap(t_heap *heap, t_node node)
 
 	if (heap->size == heap->capacity)
 	{
-		printf("ERROR: heap overflow!\n");
+		fprintf(stderr, 
+"ERROR: heap overflow!\n");
 		return ;
 	}
 	i = heap->size;

@@ -42,12 +42,7 @@ int	main(int argc, char *argv[])
 static int	init_resources(t_data *data, int *cleanup_state)
 {
 	*cleanup_state = 0;
-	data->log_file = fopen("coders.log", "w");
-	if (!data->log_file)
-	{
-		perror("Error opening coders.log");
-		return (1);
-	}
+	data->log_file = stdout;
 	if (init_data_mutexes(data) != 0)
 		return (1);
 	*cleanup_state |= CLEANUP_CORE_MUTEXES;
@@ -85,8 +80,6 @@ static int	cleanup_data(t_data *data, int cleanup_state)
 		pthread_mutex_destroy(&data->stop_mutex);
 		pthread_mutex_destroy(&data->print_mutex);
 	}
-	if (data->log_file)
-		fclose(data->log_file);
 	free(data);
 	return (1);
 }

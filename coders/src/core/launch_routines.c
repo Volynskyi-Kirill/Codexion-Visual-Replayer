@@ -20,7 +20,8 @@ static int	handle_monitor_error(t_data *data)
 	stop_simulation(data);
 	wake_all_dongle_waiters(data);
 	if (join_coders(data) != 0)
-		printf("Error: join_coders failed after monitor start error\n");
+		fprintf(stderr, 
+"Error: join_coders failed after monitor start error\n");
 	return (1);
 }
 
@@ -53,17 +54,20 @@ int	launch_simulation(t_data *data)
 {
 	if (start_coders(data) != 0)
 	{
-		printf("Error: start_coders failed\n");
+		fprintf(stderr, 
+"Error: start_coders failed\n");
 		return (1);
 	}
 	if (start_monitor(data) != 0)
 	{
-		printf("Error: start_monitor failed\n");
+		fprintf(stderr, 
+"Error: start_monitor failed\n");
 		return (handle_monitor_error(data));
 	}
 	if (join_coders(data) != 0)
 	{
-		printf("Error: join_coders failed\n");
+		fprintf(stderr, 
+"Error: join_coders failed\n");
 		return (handle_join_error(data));
 	}
 	return (join_monitor(data));

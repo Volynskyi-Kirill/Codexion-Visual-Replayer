@@ -34,7 +34,7 @@ void	print_status(t_coder *coder, const char *msg)
 {
 	pthread_mutex_lock(&coder->data->print_mutex);
 	if (!get_is_simulation_end(coder->data))
-		printf("%lld %d %s\n", get_timestamp(coder->data->start_time),
+		fprintf(stderr, "%lld %d %s\n", get_timestamp(coder->data->start_time),
 			coder->id, msg);
 	pthread_mutex_unlock(&coder->data->print_mutex);
 }

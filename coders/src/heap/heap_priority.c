@@ -58,6 +58,7 @@ long long	get_node_priority(t_coder *coder)
 		return (get_current_time());
 	if (coder->data->scheduler == CODERS_SCHED_EDF)
 		return (coder->last_compiling_at + coder->data->time_to_burnout);
-	printf("uknown scheduler!");
+	fprintf(stderr, 
+"uknown scheduler!");
 	return (0);
 }
