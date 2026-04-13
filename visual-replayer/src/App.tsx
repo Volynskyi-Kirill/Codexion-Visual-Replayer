@@ -1,40 +1,43 @@
+import { useState } from 'react';
 import { useLogStore } from './store/useLogStore';
 import { CircularHub } from './components/CircularHub';
 import { PlaybackControls } from './components/PlaybackControls';
 import { HeapViewer } from './components/HeapViewer';
 import { EventLog } from './components/EventLog';
 import { SimulationInfo } from './components/SimulationInfo';
+import { SimulationForm } from './components/SimulationForm';
+import { FAQ } from './components/FAQ';
+import { HelpCircle } from 'lucide-react';
 import './App.css';
 
 function App() {
-    const { setLogs, metadata } = useLogStore();
-
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const text = await file.text();
-        setLogs(text);
-    };
+    const { metadata, reset } = useLogStore();
+    const [isFAQOpen, setIsFAQOpen] = useState(false);
 
     return (
         <div className='app-container'>
             <header>
-                <h1>Codexion Visual Replayer</h1>
+                <div className='header-left'>
+                    <h1>Codexion Visual Replayer</h1>
+                </div>
+                <div className='header-right'>
+                    <button className='icon-btn' onClick={() => setIsFAQOpen(true)} title='Help & FAQ'>
+                        <HelpCircle size={20} />
+                    </button>
+                    {metadata && (
+                        <button className='back-btn' onClick={reset}>
+                            New Simulation
+                        </button>
+                    )}
+                </div>
             </header>
 
+            {isFAQOpen && <FAQ onClose={() => setIsFAQOpen(false)} />}
+
             {!metadata ? (
-                <div className='upload-section'>
-                    <input
-                        type='file'
-                        id='file-upload'
-                        onChange={handleFileChange}
-                        accept='.txt,.log'
-                        hidden
-                    />
-                    <label htmlFor='file-upload' className='upload-btn'>
-                        Select Simulation Log
-                    </label>
-                    <p>Drag and drop or click to upload a .txt or .log file</p>
+                <div className='setup-section'>
+                    <h2>Configure Simulation</h2>
+                    <SimulationForm />
                 </div>
             ) : (
                 <main className='replayer-content'>

@@ -9,6 +9,16 @@ export interface ParsedLog {
   maxTime: number;
 }
 
+export function parseLogLine(line: string): LogEvent | null {
+  try {
+    const rawObj = JSON.parse(line);
+    return LogEventSchema.parse(rawObj) as LogEvent;
+  } catch (e) {
+    console.warn('Skipping invalid log line:', line, e);
+    return null;
+  }
+}
+
 export function parseLogs(content: string): ParsedLog {
   const lines = content.split('\n').filter((line) => line.trim() !== '');
   const events: TimedEvent[] = [];
@@ -16,20 +26,16 @@ export function parseLogs(content: string): ParsedLog {
   let maxTime = 0;
 
   for (const line of lines) {
-    try {
-      const rawObj = JSON.parse(line);
-      const parsed = LogEventSchema.parse(rawObj) as LogEvent;
+    const parsed = parseLogLine(line);
+    if (!parsed) continue;
 
-      if (parsed.status === SimulationStatus.INITIALIZE) {
-        metadata = parsed;
-      } else {
-        events.push(parsed as TimedEvent);
-        if (parsed.ts > maxTime) {
-          maxTime = parsed.ts;
-        }
+    if (parsed.status === SimulationStatus.INITIALIZE) {
+      metadata = parsed;
+    } else {
+      events.push(parsed as TimedEvent);
+      if (parsed.ts > maxTime) {
+        maxTime = parsed.ts;
       }
-    } catch (e) {
-      console.warn('Skipping invalid log line:', line, e);
     }
   }
 

@@ -1,0 +1,2 @@
+{"timestamp":"2026-04-13T17:35:38.537842787Z","session_id":"8e54622a-c546-4d33-ba09-cfbb2d60d490","client_ip":"::1","event":"connected"}
+{"timestamp":"2026-04-13T17:35:47.543905426Z","session_id":"8e54622a-c546-4d33-ba09-cfbb2d60d490","client_ip":"::1","event":"disconnected","duration_seconds":9.006038934,"disconnect_reason":"normal"}

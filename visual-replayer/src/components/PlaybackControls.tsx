@@ -1,4 +1,4 @@
-import { Play, Pause, RotateCcw, SkipBack, SkipForward } from 'lucide-react';
+import { Play, Pause, RotateCcw, SkipBack, SkipForward, Radio } from 'lucide-react';
 import { useLogStore } from '../store/useLogStore';
 import { usePlayback } from '../hooks/usePlayback';
 
@@ -13,6 +13,7 @@ export const PlaybackControls: React.FC = () => {
     setSpeed,
     goToNextEvent,
     goToPrevEvent,
+    isStreaming,
   } = useLogStore();
 
   usePlayback();
@@ -31,7 +32,14 @@ export const PlaybackControls: React.FC = () => {
 
   return (
     <div className="controls">
-      <div className="slider-container">
+      {isStreaming && (
+        <div className="live-banner">
+          <Radio size={16} className="live-icon animate-pulse" />
+          <span>Live Simulation Running... Receiving Events</span>
+        </div>
+      )}
+
+      <div className={`slider-container ${isStreaming ? 'opacity-50' : ''}`}>
         <input
           type="range"
           min={0}
@@ -40,6 +48,7 @@ export const PlaybackControls: React.FC = () => {
           value={currentTime}
           onChange={handleSliderChange}
           className="timeline-slider"
+          disabled={isStreaming}
         />
         <div className="time-display">
           <span>{formatTime(currentTime)}</span>
@@ -47,17 +56,17 @@ export const PlaybackControls: React.FC = () => {
         </div>
       </div>
 
-      <div className="button-group">
-        <button onClick={() => setCurrentTime(0)} title="Restart">
+      <div className={`button-group ${isStreaming ? 'opacity-50' : ''}`}>
+        <button onClick={() => setCurrentTime(0)} title="Restart" disabled={isStreaming}>
           <RotateCcw size={20} />
         </button>
-        <button onClick={goToPrevEvent} title="Previous Event">
+        <button onClick={goToPrevEvent} title="Previous Event" disabled={isStreaming}>
           <SkipBack size={20} />
         </button>
-        <button onClick={togglePlay} className="play-pause-btn" title={isPlaying ? 'Pause' : 'Play'}>
+        <button onClick={togglePlay} className="play-pause-btn" title={isPlaying ? 'Pause' : 'Play'} disabled={isStreaming}>
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
         </button>
-        <button onClick={goToNextEvent} title="Next Event">
+        <button onClick={goToNextEvent} title="Next Event" disabled={isStreaming}>
           <SkipForward size={20} />
         </button>
         <div className="speed-selector">
@@ -66,6 +75,7 @@ export const PlaybackControls: React.FC = () => {
               key={s}
               onClick={() => setSpeed(s)}
               className={speed === s ? 'active' : ''}
+              disabled={isStreaming}
             >
               {s}x
             </button>
