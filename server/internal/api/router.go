@@ -29,6 +29,11 @@ func NewRouter(cfg *config.Config, logger *logs.Logger, reader *logs.Reader) *gi
 	corsConfig.AllowHeaders = []string{"Content-Type"}
 	r.Use(cors.New(corsConfig))
 
+	// Health check endpoint for Docker
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok"})
+	})
+
 	// WebSocket endpoint
 	r.GET("/api/ws/simulate", api.HandleWS)
 
