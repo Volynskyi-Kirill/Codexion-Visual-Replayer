@@ -11,10 +11,10 @@
 - [x] Create a `SnapshotGenerator` that calculates the state of all coders/dongles for any given `ts`.
 
 ## Milestone 3: Core Hub Visualization 
-- [ ] Implement `CircularHub` SVG container.
-- [ ] Create `CoderNode` with radial burnout bars using Framer Motion.
-- [ ] Create `DongleNode` with SVG USB icons and ownership indicators.
-- [ ] Implement ownership lines between coders and dongles.
+- [x] Implement `CircularHub` SVG container.
+- [x] Create `CoderNode` with radial burnout bars using Framer Motion.
+- [x] Create `DongleNode` with SVG USB icons and ownership indicators.
+- [x] Implement ownership lines between coders and dongles.
 
 ## Milestone 4: Timeline & Animation
 - [ ] Build `TimelineSlider` with millisecond scrubbing.

@@ -1,6 +1,47 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #0f172a;
+  color: #f8fafc;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+.upload-section {
+  margin-top: 5rem;
+  padding: 3rem;
+  border: 2px dashed #334155;
+  border-radius: 1rem;
+}
+
+.replayer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.controls {
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.time-info {
+  margin-top: 0.5rem;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+input[type="range"] {
+  accent-color: #3b82f6;
 }
