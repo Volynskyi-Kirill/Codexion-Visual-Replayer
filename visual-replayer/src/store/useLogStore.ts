@@ -120,11 +120,16 @@ export const useLogStore = create<LogStore>((set) => ({
     set((state) => {
       const clampedTs = Math.max(0, Math.min(ts, state.maxTime));
       let newIndex = -1;
-      for (let i = 0; i < state.events.length; i++) {
-        if (state.events[i].ts <= clampedTs) {
-          newIndex = i;
-        } else {
-          break;
+
+      // Fix: Only apply events if time is strictly greater than 0.
+      // This allows starting from a clean initial state at 0ms.
+      if (clampedTs > 0) {
+        for (let i = 0; i < state.events.length; i++) {
+          if (state.events[i].ts <= clampedTs) {
+            newIndex = i;
+          } else {
+            break;
+          }
         }
       }
       

@@ -428,6 +428,42 @@ header h1 {
     color: #3b82f6;
 }
 
+/* Live Mode UI */
+.live-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    padding: 0.6rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+.live-icon {
+    color: #10b981;
+    filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.animate-pulse {
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* Polish: Glow effects */
 .hub-wrapper::after {
     content: '';
