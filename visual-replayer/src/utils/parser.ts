@@ -1,5 +1,7 @@
 import { LogEventSchema } from './schemas';
+import { SimulationStatus } from './types';
 import type { LogEvent, InitializeEvent, TimedEvent } from './types';
+import { ERROR_MESSAGES } from '../constants';
 
 export interface ParsedLog {
   metadata: InitializeEvent;
@@ -18,10 +20,10 @@ export function parseLogs(content: string): ParsedLog {
       const rawObj = JSON.parse(line);
       const parsed = LogEventSchema.parse(rawObj) as LogEvent;
 
-      if (parsed.status === 'INITIALIZE') {
+      if (parsed.status === SimulationStatus.INITIALIZE) {
         metadata = parsed;
       } else {
-        events.push(parsed);
+        events.push(parsed as TimedEvent);
         if (parsed.ts > maxTime) {
           maxTime = parsed.ts;
         }
@@ -32,7 +34,7 @@ export function parseLogs(content: string): ParsedLog {
   }
 
   if (!metadata) {
-    throw new Error('Missing INITIALIZE event in log file');
+    throw new Error(ERROR_MESSAGES.MISSING_INITIALIZE);
   }
 
   events.sort((a, b) => a.ts - b.ts);

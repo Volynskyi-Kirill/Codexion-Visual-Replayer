@@ -1,13 +1,27 @@
-export type SimulationStatus =
-  | 'INITIALIZE'
-  | 'REQUEST_DONGLE'
-  | 'TAKE_DONGLE'
-  | 'START_COMPILE'
-  | 'START_DEBUG'
-  | 'START_REFACTOR'
-  | 'RELEASE_DONGLE'
-  | 'BURNOUT'
-  | 'SUCCESS';
+export const SimulationStatus = {
+  INITIALIZE: 'INITIALIZE',
+  REQUEST_DONGLE: 'REQUEST_DONGLE',
+  TAKE_DONGLE: 'TAKE_DONGLE',
+  START_COMPILE: 'START_COMPILE',
+  START_DEBUG: 'START_DEBUG',
+  START_REFACTOR: 'START_REFACTOR',
+  RELEASE_DONGLE: 'RELEASE_DONGLE',
+  BURNOUT: 'BURNOUT',
+  SUCCESS: 'SUCCESS',
+} as const;
+
+export type SimulationStatus = typeof SimulationStatus[keyof typeof SimulationStatus];
+
+export const CoderStatus = {
+  IDLE: 'IDLE',
+  WAITING: 'WAITING',
+  COMPILING: 'COMPILING',
+  DEBUGGING: 'DEBUGGING',
+  REFACTORING: 'REFACTORING',
+  BURNOUT: 'BURNOUT',
+} as const;
+
+export type CoderStatus = typeof CoderStatus[keyof typeof CoderStatus];
 
 export interface BaseEvent {
   ts: number;
@@ -15,15 +29,15 @@ export interface BaseEvent {
 }
 
 export interface InitializeEvent {
-  ts?: number; // Optional ts for INITIALIZE to simplify sorting/indexing if needed
-  status: 'INITIALIZE';
+  ts?: number;
+  status: typeof SimulationStatus.INITIALIZE;
   num_coders: number;
   num_dongles: number;
   time_to_burnout: number;
 }
 
 export interface RequestDongleEvent extends BaseEvent {
-  status: 'REQUEST_DONGLE';
+  status: typeof SimulationStatus.REQUEST_DONGLE;
   coder_id: number;
   dongle_id: number;
   queue: number[];
@@ -31,7 +45,7 @@ export interface RequestDongleEvent extends BaseEvent {
 }
 
 export interface TakeDongleEvent extends BaseEvent {
-  status: 'TAKE_DONGLE';
+  status: typeof SimulationStatus.TAKE_DONGLE;
   coder_id: number;
   dongle_id: number;
   queue: number[];
@@ -39,7 +53,10 @@ export interface TakeDongleEvent extends BaseEvent {
 }
 
 export interface StateTransitionEvent extends BaseEvent {
-  status: 'START_COMPILE' | 'START_DEBUG' | 'START_REFACTOR';
+  status:
+    | typeof SimulationStatus.START_COMPILE
+    | typeof SimulationStatus.START_DEBUG
+    | typeof SimulationStatus.START_REFACTOR;
   coder_id: number;
   details: {
     compiles_done: number;
@@ -48,18 +65,18 @@ export interface StateTransitionEvent extends BaseEvent {
 }
 
 export interface ReleaseDongleEvent extends BaseEvent {
-  status: 'RELEASE_DONGLE';
+  status: typeof SimulationStatus.RELEASE_DONGLE;
   coder_id: number;
   dongle_id: number;
 }
 
 export interface BurnoutEvent extends BaseEvent {
-  status: 'BURNOUT';
+  status: typeof SimulationStatus.BURNOUT;
   coder_id: number;
 }
 
 export interface SuccessEvent extends BaseEvent {
-  status: 'SUCCESS';
+  status: typeof SimulationStatus.SUCCESS;
 }
 
 export type TimedEvent =
@@ -74,7 +91,7 @@ export type LogEvent = InitializeEvent | TimedEvent;
 
 export interface CoderState {
   id: number;
-  status: 'IDLE' | 'WAITING' | 'COMPILING' | 'DEBUGGING' | 'REFACTORING' | 'BURNOUT';
+  status: CoderStatus;
   deadline: number;
   current_dongle_id: number | null;
   compiles_done: number;

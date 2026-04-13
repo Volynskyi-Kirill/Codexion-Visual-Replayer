@@ -1,10 +1,11 @@
 import './App.css'
+import { APP_TITLE, UPLOAD_PROMPT } from './constants'
 
 function App() {
   return (
     <div className="app-container">
-      <h1>Codexion Visual Replayer</h1>
-      <p>Upload a log file to get started.</p>
+      <h1>{APP_TITLE}</h1>
+      <p>{UPLOAD_PROMPT}</p>
     </div>
   )
 }

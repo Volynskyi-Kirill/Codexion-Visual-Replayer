@@ -1,19 +1,20 @@
 import { z } from 'zod';
+import { SimulationStatus } from './types';
 
 const BaseEventSchema = z.object({
   ts: z.number(),
-  status: z.string(),
+  status: z.nativeEnum(SimulationStatus),
 });
 
 const InitializeEventSchema = z.object({
-  status: z.literal('INITIALIZE'),
+  status: z.literal(SimulationStatus.INITIALIZE),
   num_coders: z.number(),
   num_dongles: z.number(),
   time_to_burnout: z.number(),
 });
 
 const RequestDongleEventSchema = BaseEventSchema.extend({
-  status: z.literal('REQUEST_DONGLE'),
+  status: z.literal(SimulationStatus.REQUEST_DONGLE),
   coder_id: z.number(),
   dongle_id: z.number(),
   queue: z.array(z.number()),
@@ -21,7 +22,7 @@ const RequestDongleEventSchema = BaseEventSchema.extend({
 });
 
 const TakeDongleEventSchema = BaseEventSchema.extend({
-  status: z.literal('TAKE_DONGLE'),
+  status: z.literal(SimulationStatus.TAKE_DONGLE),
   coder_id: z.number(),
   dongle_id: z.number(),
   queue: z.array(z.number()),
@@ -30,9 +31,9 @@ const TakeDongleEventSchema = BaseEventSchema.extend({
 
 const StateTransitionEventSchema = BaseEventSchema.extend({
   status: z.union([
-    z.literal('START_COMPILE'),
-    z.literal('START_DEBUG'),
-    z.literal('START_REFACTOR'),
+    z.literal(SimulationStatus.START_COMPILE),
+    z.literal(SimulationStatus.START_DEBUG),
+    z.literal(SimulationStatus.START_REFACTOR),
   ]),
   coder_id: z.number(),
   details: z.object({
@@ -42,18 +43,18 @@ const StateTransitionEventSchema = BaseEventSchema.extend({
 });
 
 const ReleaseDongleEventSchema = BaseEventSchema.extend({
-  status: z.literal('RELEASE_DONGLE'),
+  status: z.literal(SimulationStatus.RELEASE_DONGLE),
   coder_id: z.number(),
   dongle_id: z.number(),
 });
 
 const BurnoutEventSchema = BaseEventSchema.extend({
-  status: z.literal('BURNOUT'),
+  status: z.literal(SimulationStatus.BURNOUT),
   coder_id: z.number(),
 });
 
 const SuccessEventSchema = BaseEventSchema.extend({
-  status: z.literal('SUCCESS'),
+  status: z.literal(SimulationStatus.SUCCESS),
 });
 
 export const LogEventSchema = z.union([

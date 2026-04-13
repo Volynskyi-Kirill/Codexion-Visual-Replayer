@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { TimedEvent, InitializeEvent } from '../utils/types';
 import { parseLogs } from '../utils/parser';
+import { ERROR_MESSAGES } from '../constants';
 
 interface LogStore {
   metadata: InitializeEvent | null;
@@ -28,8 +29,9 @@ export const useLogStore = create<LogStore>((set) => ({
     try {
       const { metadata, events, maxTime } = parseLogs(content);
       set({ metadata, events, maxTime, currentTime: 0, isLoading: false });
-    } catch (e: any) {
-      set({ error: e.message || 'Failed to parse logs', isLoading: false });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : ERROR_MESSAGES.PARSING_FAILED;
+      set({ error: message, isLoading: false });
     }
   },
 

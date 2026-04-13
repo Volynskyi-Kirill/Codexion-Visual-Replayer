@@ -1,3 +1,4 @@
+import { SimulationStatus, CoderStatus } from './types';
 import type { 
   TimedEvent, 
   InitializeEvent, 
@@ -5,6 +6,7 @@ import type {
   CoderState, 
   DongleState 
 } from './types';
+import { SIMULATION_DEFAULTS } from '../constants';
 
 export function generateSnapshot(
   metadata: InitializeEvent,
@@ -20,7 +22,7 @@ export function generateSnapshot(
   for (let i = 0; i < metadata.num_coders; i++) {
     coders.set(i, {
       id: i,
-      status: 'IDLE',
+      status: CoderStatus.IDLE,
       deadline: 0,
       current_dongle_id: null,
       compiles_done: 0,
@@ -43,17 +45,17 @@ export function generateSnapshot(
     if (event.ts > targetTs) break;
 
     switch (event.status) {
-      case 'REQUEST_DONGLE': {
+      case SimulationStatus.REQUEST_DONGLE: {
         const coder = coders.get(event.coder_id);
         const dongle = dongles.get(event.dongle_id);
-        if (coder) coder.status = 'WAITING';
+        if (coder) coder.status = CoderStatus.WAITING;
         if (dongle) {
           dongle.queue = event.queue;
           dongle.priorities = event.priorities;
         }
         break;
       }
-      case 'TAKE_DONGLE': {
+      case SimulationStatus.TAKE_DONGLE: {
         const coder = coders.get(event.coder_id);
         const dongle = dongles.get(event.dongle_id);
         if (coder) coder.current_dongle_id = event.dongle_id;
@@ -64,41 +66,38 @@ export function generateSnapshot(
         }
         break;
       }
-      case 'START_COMPILE':
-      case 'START_DEBUG':
-      case 'START_REFACTOR': {
+      case SimulationStatus.START_COMPILE:
+      case SimulationStatus.START_DEBUG:
+      case SimulationStatus.START_REFACTOR: {
         const coder = coders.get(event.coder_id);
         if (coder) {
-          coder.status = event.status === 'START_COMPILE' ? 'COMPILING' :
-                        event.status === 'START_DEBUG' ? 'DEBUGGING' : 'REFACTORING';
+          coder.status = event.status === SimulationStatus.START_COMPILE ? CoderStatus.COMPILING :
+                        event.status === SimulationStatus.START_DEBUG ? CoderStatus.DEBUGGING : CoderStatus.REFACTORING;
           coder.deadline = event.details.deadline;
           coder.compiles_done = event.details.compiles_done;
         }
         break;
       }
-      case 'RELEASE_DONGLE': {
+      case SimulationStatus.RELEASE_DONGLE: {
         const coder = coders.get(event.coder_id);
         const dongle = dongles.get(event.dongle_id);
         if (coder) {
-          coder.status = 'IDLE';
+          coder.status = CoderStatus.IDLE;
           coder.current_dongle_id = null;
         }
         if (dongle) {
           dongle.current_owner_id = null;
-          // In actual sim, release triggers cooldown, but we don't have cooldown duration in this event.
-          // We assume cooldown starts at event.ts. For visualization, cooldown is often fixed.
-          // If the sim log provides cooldown info, we'd use it here.
-          dongle.cooldown_until = event.ts + 500; // Mock cooldown for now if not in log
+          dongle.cooldown_until = event.ts + SIMULATION_DEFAULTS.MOCK_COOLDOWN_MS;
         }
         break;
       }
-      case 'BURNOUT': {
+      case SimulationStatus.BURNOUT: {
         const coder = coders.get(event.coder_id);
-        if (coder) coder.status = 'BURNOUT';
+        if (coder) coder.status = CoderStatus.BURNOUT;
         isBurnedOut = true;
         break;
       }
-      case 'SUCCESS': {
+      case SimulationStatus.SUCCESS: {
         isSuccess = true;
         break;
       }
