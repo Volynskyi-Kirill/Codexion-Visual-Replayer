@@ -162,6 +162,16 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
             >
                 Coder {coder.id}
             </text>
+
+            {/* Compiles Done Label */}
+            <text
+                y={NODE_SIZE / 2 + 50}
+                textAnchor='middle'
+                fill='#94a3b8'
+                fontSize='10'
+            >
+                {coder.compiles_done}
+            </text>
         </motion.g>
     );
 };
