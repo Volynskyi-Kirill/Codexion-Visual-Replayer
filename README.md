@@ -19,26 +19,33 @@ The system consists of a high-performance **C simulation binary**, a **Go backen
 The easiest way to deploy the full stack is using **Docker Compose**.
 
 ### 1. Prerequisites
+
 - Docker and Docker Compose installed on the target machine.
 
 ### 2. Configuration
+
 Copy the template environment file to `.env`:
+
 ```bash
 cp .env.example .env
 ```
 
 Edit `.env` to match your production environment:
+
 - `PORT`: The internal port for the Go backend (default `3000`).
 - `CLIENT_HOST`: The domain or IP from which users will access the site (used for CORS).
 - `LOGS_DIR`: Path where simulation logs and analytics will be persisted.
 
 ### 3. Launch
+
 Build and start the containers in detached mode:
+
 ```bash
 docker-compose up -d --build
 ```
 
 The application will be available at:
+
 - **Frontend**: `http://your-server-ip` (Port 80)
 - **Backend API**: `http://your-server-ip:3000` (or your custom `PORT`)
 
@@ -47,11 +54,13 @@ The application will be available at:
 ## Local Development
 
 ### Backend (Go + C)
+
 1. Navigate to the server directory: `cd server`
 2. Build the C binary: `make build` (this copies the binary from `../coders` to `server/`)
 3. Run the Go server: `go run cmd/server/main.go` or `make run`
 
 ### Frontend (React)
+
 1. Navigate to the frontend directory: `cd visual-replayer`
 2. Install dependencies: `npm install`
 3. Start development server: `npm run dev`
@@ -76,8 +85,3 @@ The application will be available at:
 - **C Binary Compilation**: If building without Docker, ensure you have `gcc` and `make` installed. The binary requires POSIX threads (`-pthread`).
 - **WebSocket Issues**: Ensure your firewall allows traffic on both port 80 (frontend) and the backend port (default 3000).
 - **Persistence**: Analytics data is stored in the volume mapped to `./server/logs`. Ensure the directory has appropriate write permissions.
-
----
-
-## License
-Created as part of the 42 curriculum.
