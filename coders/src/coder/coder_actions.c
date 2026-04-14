@@ -6,7 +6,7 @@
 /*   By: kvolynsk <kvolynsk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2026/04/11 17:30:00 by kvolynsk      #+#    #+#                 */
-/*   Updated: 2026/04/11 17:30:00 by kvolynsk      ########   odam.nl         */
+/*   Updated: 2026/04/14 21:41:14 by kvolynsk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,6 @@ static int	can_take_dongle(t_dongle *dongle, t_coder *coder)
 
 	elapsed = get_current_time() - dongle->last_released_at;
 	return (dongle->status == DONGLE_FREE
-		&& elapsed > coder->data->dongle_cooldown
+		&& elapsed >= coder->data->dongle_cooldown
 		&& dongle->queue->array[0].coder_id == coder->id);
 }

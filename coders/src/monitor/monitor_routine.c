@@ -6,7 +6,7 @@
 /*   By: kvolynsk <kvolynsk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2026/04/11 17:30:00 by kvolynsk      #+#    #+#                 */
-/*   Updated: 2026/04/11 17:30:00 by kvolynsk      ########   odam.nl         */
+/*   Updated: 2026/04/14 21:44:42 by kvolynsk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static int	find_burned_out_coder(t_data *data, int *burned_out_id)
 		pthread_mutex_lock(&data->coders[i].mutex);
 		last_compile = data->coders[i].last_compiling_at;
 		pthread_mutex_unlock(&data->coders[i].mutex);
-		if (now - last_compile >= data->time_to_burnout)
+		if (now - last_compile > data->time_to_burnout)
 		{
 			*burned_out_id = data->coders[i].id;
 			return (1);
