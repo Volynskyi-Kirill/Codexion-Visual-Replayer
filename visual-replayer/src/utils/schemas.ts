@@ -75,13 +75,16 @@ export const LogEventSchema = z.union([
 
 export type ParsedLogEvent = z.infer<typeof LogEventSchema>;
 
+const MIN_TIME_MS = 60;
+const MIN_TIME_MESSAGE = `Value must be at least ${MIN_TIME_MS} ms`;
+
 export const SimulationConfigSchema = z.object({
     number_of_coders: z.number().min(1).max(20),
     number_of_dongles: z.number().min(1).max(10),
-    time_to_burnout: z.number().min(100),
-    time_to_compile: z.number().min(100),
-    time_to_debug: z.number().min(100),
-    time_to_refactor: z.number().min(100),
+    time_to_burnout: z.number().min(MIN_TIME_MS, { message: MIN_TIME_MESSAGE }),
+    time_to_compile: z.number().min(MIN_TIME_MS, { message: MIN_TIME_MESSAGE }),
+    time_to_debug: z.number().min(MIN_TIME_MS, { message: MIN_TIME_MESSAGE }),
+    time_to_refactor: z.number().min(MIN_TIME_MS, { message: MIN_TIME_MESSAGE }),
     number_of_compiles_required: z.number().min(1),
     dongle_cooldown: z.number().min(0),
     scheduler: z.enum(['fifo', 'edf']),
