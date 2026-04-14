@@ -6,7 +6,7 @@
 /*   By: kvolynsk <kvolynsk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2026/04/11 15:11:00 by kvolynsk      #+#    #+#                 */
-/*   Updated: 2026/04/11 15:11:00 by kvolynsk      ########   odam.nl         */
+/*   Updated: 2026/04/14 20:24:57 by kvolynsk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void	increment_compiles_done(t_coder *coder)
  */
 void	get_dongle_lock_order(t_coder *coder, int *first, int *second)
 {
-	int	left_dongle_idx;
-	int	right_dongle_idx;
+	int left_dongle_idx;
+	int right_dongle_idx;
 
 	left_dongle_idx = coder->id - 1;
 	right_dongle_idx = (left_dongle_idx - 1 + coder->data->number_of_coders)
