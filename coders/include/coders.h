@@ -6,7 +6,7 @@
 /*   By: kvolynsk <kvolynsk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2026/03/24 20:16:39 by kvolynsk      #+#    #+#                 */
-/*   Updated: 2026/04/11 17:30:00 by kvolynsk      ########   odam.nl         */
+/*   Updated: 2026/04/15 01:16:14 by kvolynsk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_coder
 	t_coder_status		status;
 	t_data				*data;
 	long long			last_compiling_at;
+	long long			request_time;
 	pthread_mutex_t		mutex;
 	int					compiles_done;
 }						t_coder;
@@ -114,8 +115,8 @@ long long				ft_atoll(const char *str);
 long long				get_current_time(void);
 int						get_is_simulation_end(t_data *data);
 void					print_status(t_coder *coder, const char *msg);
-void					log_json(t_data *data, const char *status, t_coder *coder,
-							t_dongle *dongle);
+void					log_json(t_data *data, const char *status,
+							t_coder *coder, t_dongle *dongle);
 
 t_heap					*create_heap(int capacity);
 void					swap_heap(t_node *a, t_node *b);

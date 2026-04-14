@@ -6,13 +6,14 @@
 /*   By: kvolynsk <kvolynsk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2026/04/11 17:30:00 by kvolynsk      #+#    #+#                 */
-/*   Updated: 2026/04/14 21:41:14 by kvolynsk      ########   odam.nl         */
+/*   Updated: 2026/04/15 01:24:27 by kvolynsk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-static void	take_dongle(t_coder *coder, int idx);
+static void	enqueue_dongle(t_coder *coder, int idx);
+static void	acquire_dongle(t_coder *coder, int idx);
 static void	release_dongle(t_coder *coder, int idx);
 static int	wait_for_dongle(t_dongle *dongle, t_coder *coder);
 static int	can_take_dongle(t_dongle *dongle, t_coder *coder);
@@ -30,11 +31,14 @@ void	coder_compile(t_coder *coder)
 	int	first;
 	int	second;
 
+	coder->request_time = get_current_time();
 	get_dongle_lock_order(coder, &first, &second);
-	take_dongle(coder, first);
-	take_dongle(coder, second);
+	enqueue_dongle(coder, first);
+	enqueue_dongle(coder, second);
+	acquire_dongle(coder, first);
+	acquire_dongle(coder, second);
 	update_compiling_at(coder);
-	print_status(coder, "is compiling");
+	// print_status(coder, "is compiling");
 	log_json(coder->data, "START_COMPILE", coder, NULL);
 	ft_sleep(coder->data->time_to_compile);
 	release_dongle(coder, first);
@@ -50,7 +54,7 @@ void	coder_compile(t_coder *coder)
  * @param coder Current coder.
  * @param idx Dongle index to take.
  */
-static void	take_dongle(t_coder *coder, int idx)
+static void	enqueue_dongle(t_coder *coder, int idx)
 {
 	t_dongle	*dongle;
 	t_node		node;
@@ -60,6 +64,34 @@ static void	take_dongle(t_coder *coder, int idx)
 	node.priority = get_node_priority(coder);
 	pthread_mutex_lock(&dongle->mutex);
 	insert_heap(dongle->queue, node);
+	pthread_mutex_unlock(&dongle->mutex);
+	// log_json(coder->data, "REQUEST_DONGLE", coder, dongle);
+	// if (wait_for_dongle(dongle, coder))
+	// {
+	// 	pthread_mutex_unlock(&dongle->mutex);
+	// 	return ;
+	// }
+	// pop_heap(dongle->queue);
+	// dongle->status = DONGLE_OCCUPIED;
+	// print_status(coder, "has taken a dongle");
+	// log_json(coder->data, "TAKE_DONGLE", coder, dongle);
+	// pthread_mutex_unlock(&dongle->mutex);
+}
+
+/**
+ * @brief Acquires a dongle the coder is already enqueued for.
+ *
+ * Waits on the condition variable until this coder can take the dongle.
+ *
+ * @param coder Current coder.
+ * @param idx Dongle index to acquire.
+ */
+static void	acquire_dongle(t_coder *coder, int idx)
+{
+	t_dongle	*dongle;
+
+	dongle = &coder->data->dongles[idx];
+	pthread_mutex_lock(&dongle->mutex);
 	log_json(coder->data, "REQUEST_DONGLE", coder, dongle);
 	if (wait_for_dongle(dongle, coder))
 	{
@@ -68,7 +100,7 @@ static void	take_dongle(t_coder *coder, int idx)
 	}
 	pop_heap(dongle->queue);
 	dongle->status = DONGLE_OCCUPIED;
-	print_status(coder, "has taken a dongle");
+	// print_status(coder, "has taken a dongle");
 	log_json(coder->data, "TAKE_DONGLE", coder, dongle);
 	pthread_mutex_unlock(&dongle->mutex);
 }
