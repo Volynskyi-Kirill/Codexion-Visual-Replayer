@@ -103,15 +103,23 @@ export const useLogStore = create<LogStore>((set) => ({
                         streamingStartTime: Date.now(),
                     });
                 } else {
+                    const isTerminal =
+                        parsed.status === SimulationStatus.SUCCESS ||
+                        parsed.status === SimulationStatus.BURNOUT;
+
                     set((state) => {
                         const newEvents = [
                             ...state.events,
                             parsed as TimedEvent,
                         ];
-                        const newMaxTime = Math.max(state.maxTime, parsed.ts);
+
+                        // Clamp maxTime to terminal event timestamp if simulation finished
+                        const newMaxTime = isTerminal
+                            ? parsed.ts
+                            : Math.max(state.maxTime, parsed.ts);
 
                         const shouldFollow =
-                            state.currentTime === state.maxTime;
+                            state.currentTime === state.maxTime || isTerminal;
 
                         return {
                             events: newEvents,
@@ -122,6 +130,11 @@ export const useLogStore = create<LogStore>((set) => ({
                             currentEventIndex: shouldFollow
                                 ? newEvents.length - 1
                                 : state.currentEventIndex,
+                            isStreaming: isTerminal ? false : state.isStreaming,
+                            isPlaying: isTerminal ? false : state.isPlaying,
+                            streamingStartTime: isTerminal
+                                ? null
+                                : state.streamingStartTime,
                         };
                     });
                 }
