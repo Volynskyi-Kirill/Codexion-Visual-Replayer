@@ -19,7 +19,7 @@ void	*coder_routine(void *arg)
 
 	coder = (t_coder *)arg;
 	if (coder->id % 2 == 0)
-		ft_sleep(coder->data->time_to_compile);
+		ft_sleep(5);
 	while (!get_is_simulation_end(coder->data))
 	{
 		coder_compile(coder);
