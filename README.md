@@ -53,6 +53,16 @@ The application will be available at:
 
 ## Local Development
 
+### One-command launch
+
+From the repository root, start the full local stack with:
+
+```bash
+make local-run
+```
+
+This target builds the C simulation in `coders`, copies the `codexion` binary into `server/`, starts the Go backend with `go run cmd/server/main.go`, and launches the frontend with `npm run dev` in `visual-replayer`.
+
 ### Backend (Go + C)
 
 1. Navigate to the server directory: `cd server`
