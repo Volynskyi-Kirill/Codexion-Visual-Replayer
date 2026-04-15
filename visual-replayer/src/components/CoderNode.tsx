@@ -62,10 +62,13 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
     const angle = getCoderAngle(coder.id, totalCoders);
     const { x, y } = polarToCartesian(angle, CODER_RADIUS);
 
-    const timeLeft = Math.max(
-        0,
-        timeToBurnout - (currentTime - coder.last_state_change_ts),
-    );
+    const isBurnedOut = coder.status === 'BURNOUT';
+    const timeLeft = isBurnedOut
+        ? 0
+        : Math.max(
+              0,
+              timeToBurnout - (currentTime - coder.last_state_change_ts),
+          );
     const progress = timeLeft / timeToBurnout;
     const strokeDasharray = 2 * Math.PI * (NODE_SIZE / 2 + 5);
     const strokeDashoffset = strokeDasharray * (1 - progress);
@@ -149,9 +152,11 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
                 }}
                 transition={stateTransition}
             >
-                {timeLeft < 1000
-                    ? `${Math.ceil(timeLeft)}ms`
-                    : `${(timeLeft / 1000).toFixed(1)}s`}
+                {coder.status === 'BURNOUT'
+                    ? 'DEAD'
+                    : timeLeft < 1000
+                      ? `${Math.ceil(timeLeft)}ms`
+                      : `${(timeLeft / 1000).toFixed(1)}s`}
             </motion.text>
 
             {/* ID Label */}
