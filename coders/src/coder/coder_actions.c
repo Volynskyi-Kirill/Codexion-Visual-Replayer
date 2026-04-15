@@ -38,7 +38,6 @@ void	coder_compile(t_coder *coder)
 	acquire_dongle(coder, first);
 	acquire_dongle(coder, second);
 	update_compiling_at(coder);
-	// print_status(coder, "is compiling");
 	log_json(coder->data, "START_COMPILE", coder, NULL);
 	ft_sleep(coder->data->time_to_compile);
 	release_dongle(coder, first);
@@ -64,18 +63,8 @@ static void	enqueue_dongle(t_coder *coder, int idx)
 	node.priority = get_node_priority(coder);
 	pthread_mutex_lock(&dongle->mutex);
 	insert_heap(dongle->queue, node);
+	log_json(coder->data, "REQUEST_DONGLE", coder, dongle);
 	pthread_mutex_unlock(&dongle->mutex);
-	// log_json(coder->data, "REQUEST_DONGLE", coder, dongle);
-	// if (wait_for_dongle(dongle, coder))
-	// {
-	// 	pthread_mutex_unlock(&dongle->mutex);
-	// 	return ;
-	// }
-	// pop_heap(dongle->queue);
-	// dongle->status = DONGLE_OCCUPIED;
-	// print_status(coder, "has taken a dongle");
-	// log_json(coder->data, "TAKE_DONGLE", coder, dongle);
-	// pthread_mutex_unlock(&dongle->mutex);
 }
 
 /**
@@ -92,7 +81,6 @@ static void	acquire_dongle(t_coder *coder, int idx)
 
 	dongle = &coder->data->dongles[idx];
 	pthread_mutex_lock(&dongle->mutex);
-	log_json(coder->data, "REQUEST_DONGLE", coder, dongle);
 	if (wait_for_dongle(dongle, coder))
 	{
 		pthread_mutex_unlock(&dongle->mutex);
@@ -100,7 +88,6 @@ static void	acquire_dongle(t_coder *coder, int idx)
 	}
 	pop_heap(dongle->queue);
 	dongle->status = DONGLE_OCCUPIED;
-	// print_status(coder, "has taken a dongle");
 	log_json(coder->data, "TAKE_DONGLE", coder, dongle);
 	pthread_mutex_unlock(&dongle->mutex);
 }

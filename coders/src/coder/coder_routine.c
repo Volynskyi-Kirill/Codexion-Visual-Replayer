@@ -26,12 +26,10 @@ void	*coder_routine(void *arg)
 		increment_compiles_done(coder);
 		if (get_is_simulation_end(coder->data))
 			return (NULL);
-		// print_status(coder, "is debugging");
 		log_json(coder->data, "START_DEBUG", coder, NULL);
 		ft_sleep(coder->data->time_to_debug);
 		if (get_is_simulation_end(coder->data))
 			return (NULL);
-		// print_status(coder, "is refactoring");
 		log_json(coder->data, "START_REFACTOR", coder, NULL);
 		ft_sleep(coder->data->time_to_refactor);
 	}
