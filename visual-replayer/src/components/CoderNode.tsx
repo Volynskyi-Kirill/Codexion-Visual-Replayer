@@ -149,7 +149,9 @@ export const CoderNode: React.FC<CoderNodeProps> = ({
                 }}
                 transition={stateTransition}
             >
-                {Math.ceil(timeLeft / 1000)}s
+                {timeLeft < 1000
+                    ? `${Math.ceil(timeLeft)}ms`
+                    : `${(timeLeft / 1000).toFixed(1)}s`}
             </motion.text>
 
             {/* ID Label */}

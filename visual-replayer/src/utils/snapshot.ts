@@ -120,7 +120,9 @@ export function generateSnapshot(
                 if (dongle) {
                     dongle.current_owner_id = null;
                     dongle.cooldown_until =
-                        event.ts + SIMULATION_DEFAULTS.MOCK_COOLDOWN_MS;
+                        event.ts +
+                        (metadata.dongle_cooldown ??
+                            SIMULATION_DEFAULTS.MOCK_COOLDOWN_MS);
                 }
                 break;
             }

@@ -143,7 +143,7 @@ export const useLogStore = create<LogStore>((set) => ({
                     streamingStartTime: null,
                 });
             };
-        } catch (e) {
+        } catch {
             set({
                 error: ERROR_MESSAGES.FETCH_FAILED,
                 isLoading: false,

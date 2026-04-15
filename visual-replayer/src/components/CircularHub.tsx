@@ -4,6 +4,7 @@ import { useLogStore } from '../store/useLogStore';
 import { generateSnapshot } from '../utils/snapshot';
 import { CoderNode } from './CoderNode';
 import { DongleNode } from './DongleNode';
+import { SIMULATION_DEFAULTS } from '../constants';
 import {
     HUB_SIZE,
     CENTER,
@@ -197,6 +198,11 @@ export const CircularHub: React.FC = () => {
                         key={`dongle-${dongle.id}`}
                         dongle={dongle}
                         totalDongles={metadata.num_dongles}
+                        currentTime={currentTime}
+                        cooldownDuration={
+                            metadata.dongle_cooldown ??
+                            SIMULATION_DEFAULTS.MOCK_COOLDOWN_MS
+                        }
                     />
                 ))}
 
