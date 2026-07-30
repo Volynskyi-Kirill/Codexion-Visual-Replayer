@@ -5,6 +5,8 @@ local: local-run
 local-run:
 	$(MAKE) -C coders
 	cp coders/codexion server/codexion
+	( cd server && go mod download )
+	( cd visual-replayer && npm install )
 	( cd server && go run cmd/server/main.go ) &
 	( cd visual-replayer && npm run dev )
 
